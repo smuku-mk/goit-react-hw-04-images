@@ -10,15 +10,15 @@ export const ImageGallery = ({ query, handleImgOpenClick }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const getImages = async () => {
+      setLoading(true);
+      const response = await fetchImages({ query });
+      setImages(response);
+      setLoading(false);
+    };
+
     getImages();
   }, [query]);
-
-  const getImages = async () => {
-    setLoading(true);
-    const response = await fetchImages({ query });
-    setImages(response);
-    setLoading(false);
-  };
 
   const handleBtnClick = async () => {
     const nextPage = page + 1;
