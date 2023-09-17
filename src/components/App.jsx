@@ -29,7 +29,7 @@ export class App extends Component {
     const { query, selectedImage } = this.state;
     return (
       <>
-        <Searchbar onSubmit={this.handleSubmit} />
+        <Searchbar data={this.handleSubmit} />
         <ImageGallery
           query={query}
           handleImgOpenClick={this.handleImgOpenClick}
