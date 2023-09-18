@@ -1,47 +1,37 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
 import { Searchbar } from './Searchbar';
 import { ImageGallery } from './ImageGallery';
 import { Modal } from './Modal';
 
-export class App extends Component {
-  state = {
-    query: '',
-    selectedImage: null,
-  };
+export const App = () => {
+  const [query, setQuery] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  handleSubmit = data => {
+  const handleSubmit = data => {
     const { input } = data;
-    this.setState({
-      query: input,
-    });
+    setQuery(input);
   };
 
-  handleImgOpenClick = image => {
-    this.setState({ selectedImage: image });
+  const handleImgOpenClick = image => {
+    setSelectedImage(image);
   };
 
-  handleImgCloseClick = () => {
-    this.setState({ selectedImage: null });
+  const handleImgCloseClick = () => {
+    setSelectedImage(null);
   };
 
-  render() {
-    const { query, selectedImage } = this.state;
-    return (
-      <>
-        <Searchbar data={this.handleSubmit} />
-        <ImageGallery
-          query={query}
-          handleImgOpenClick={this.handleImgOpenClick}
+  return (
+    <>
+      <Searchbar data={handleSubmit} />
+      <ImageGallery query={query} onClick={handleImgOpenClick} />
+      {selectedImage && (
+        <Modal
+          onClose={handleImgCloseClick}
+          imgSrc={selectedImage.largeImageURL}
+          imgAlt={selectedImage.tags}
         />
-        {selectedImage && (
-          <Modal
-            onClose={this.handleImgCloseClick}
-            imgSrc={selectedImage.largeImageURL}
-            imgAlt={selectedImage.tags}
-          />
-        )}
-      </>
-    );
-  }
-}
+      )}
+    </>
+  );
+};
