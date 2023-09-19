@@ -8,6 +8,7 @@ export const ImageGallery = ({ query, onClick }) => {
   const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [totalHits, setTotalHits] = useState(0);
 
   useEffect(() => {
     if (query) {
@@ -15,7 +16,8 @@ export const ImageGallery = ({ query, onClick }) => {
         try {
           setLoading(true);
           const response = await fetchImages({ query });
-          setImages(response);
+          setImages(response.hits);
+          setTotalHits(response.total);
         } catch (error) {
           alert(error);
         } finally {
@@ -31,10 +33,9 @@ export const ImageGallery = ({ query, onClick }) => {
     const nextPage = page + 1;
     setLoading(true);
     const response = await fetchImages({ query: query, page: nextPage });
-    setImages([...images, ...response]);
+    setImages([...images, ...response.hits]);
     setPage(nextPage);
     setLoading(false);
-    console.log(images);
   };
 
   return (
@@ -44,7 +45,7 @@ export const ImageGallery = ({ query, onClick }) => {
           <ImageGalleryItem key={image.id} image={image} onClick={onClick} />
         ))}
       </ul>
-      {images.length % 12 === 0 && images.length !== 0 ? (
+      {totalHits !== images.length ? (
         <Button onClick={handleBtnClick} />
       ) : (
         <></>
